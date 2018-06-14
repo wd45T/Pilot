@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pilot.DataCore\Pilot.DataCore.csproj" />
     <ProjectReference Include="..\Pilot.Repository\Pilot.Repository.csproj" />
   </ItemGroup>
 

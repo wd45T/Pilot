@@ -13,10 +13,4 @@
     <ProjectReference Include="..\Pilot.DataCore\Pilot.DataCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Implementations\" />
-    <Folder Include="Mappings\" />
-  </ItemGroup>
-
 </Project>

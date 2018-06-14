@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pilot.DataCore;
+using Pilot.Repository.Implementations;
+using Pilot.Repository.Interfaces;
+using Pilot.Repository.Mappings;
 
 namespace Pilot
 {
@@ -37,6 +41,11 @@ namespace Pilot
             services.AddTransient(sp => new DataManager(ConnectionString));
             services.AddTransient<Func<DataManager>>(_ => () => new DataManager(ConnectionString));
             services.AddTransient<Func<SqlConnection>>(_ => () => new SqlConnection(ConnectionString));
+
+            services.AddScoped<IUserRepository, UserRepository>();
+
+
+            services.AddAutoMapper(_ => _.AddProfiles(typeof(DomainProfile)));
 
             services.AddMvc();
         }

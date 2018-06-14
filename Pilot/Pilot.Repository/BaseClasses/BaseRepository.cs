@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Pilot.Repository.BaseClasses
 {
-    public abstract class BaseRepository <TEntity, TDto>  where TEntity : class, IEntity  where TDto : class
+    public abstract class BaseRepository <TEntity, TDto>  where TEntity : class, IEntity where TDto : class
     {
         protected readonly DataManager _dataManager;
 
@@ -40,7 +40,7 @@ namespace Pilot.Repository.BaseClasses
         /// <returns></returns>
         public async virtual Task<ICollection<TDto>> GetDtoAll()
         {
-            var table = _dataManager.GetTable<TEntity>().Where(x=> !x.Deleted.HasValue);
+            var table = _dataManager.GetTable<TEntity>().Where(x => !x.Deleted.HasValue);
             return await table.ProjectTo<TDto>().ToListAsync();
         }
 
@@ -52,7 +52,12 @@ namespace Pilot.Repository.BaseClasses
         /// <returns></returns>
         public async virtual Task<TDto> GetDtoById(Guid id)
         {
-            return await GetEntityIQueriable(x=>x.Id == id).ProjectTo<TDto>().FirstOrDefaultAsync();
+            return await GetEntityIQueriable(x => x.Id == id).ProjectTo<TDto>().FirstOrDefaultAsync();
+        }
+
+        public void Dispose()
+        {
+            _dataManager.Dispose();
         }
     }
 }
