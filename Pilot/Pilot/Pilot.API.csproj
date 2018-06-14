@@ -16,4 +16,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pilot.DataCore\Pilot.DataCore.csproj" />
+    <ProjectReference Include="..\Pilot.Repository\Pilot.Repository.csproj" />
+  </ItemGroup>
+
 </Project>
