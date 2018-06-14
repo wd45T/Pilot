@@ -1,0 +1,88 @@
+﻿<#@ template language="C#" debug="True" hostSpecific="True"                           #>
+<#@ output extension=".generated.cs"                                                  #>
+<#@ include file="$(LinqToDBT4SqlServerTemplatesDirectory)LinqToDB.SqlServer.Tools.ttinclude" #>
+<#@ include file="$(LinqToDBT4SqlServerTemplatesDirectory)PluralizationService.ttinclude"     #>
+<#
+                NamespaceName = "Pilot.DataCore";
+				Model.Usings.Add("Pilot.DataCore.Infrastructure");
+
+                DataContextName               = "DataManager";               // DataContext class name. If null - database name + "DB".
+                //BaseDataContextClass          = ".BaseDataManager";             // Base DataContext class name. If null - LinqToDB.Data.DataConnection.
+                GenerateConstructors          = false;               // Enforce generating DataContext constructors.
+                //DefaultConfiguration          = null;               // Defines default configuration for default DataContext constructor.
+
+                //BaseEntityClass               = "Infrastructure.IEntity";               // Base Entity class name. If null - none.
+                //DatabaseName                  = null;               // Table database name - [Table(Database="DatabaseName")].
+                //GenerateDatabaseName          = false;              // Always generate table database name, even though DatabaseName is null.
+                IncludeDefaultSchema          = true;               // Default schema name is generated - [Table(Database="Northwind", Schema="dbo", Name="Customers")]
+
+                OneToManyAssociationType      = "IEnumerable<{0}>"; // One To Many association type (for members only). Change it to "List<{0}>" if needed.
+                //GenerateAssociations          = true;               // Enforce generating associations as type members.
+                GenerateBackReferences        = true;               // Enforce generating backreference associations (affects both members and extensions).
+                //GenerateAssociationExtensions = false;              // Enforce generating associations as extension methods. NB: this option does not affect GenerateAssociations. This will require linq2db 1.9.0 and above
+
+                //ReplaceSimilarTables          = true;               // Replaces stored procedure result class names with similar to existing table class names.
+                GenerateFindExtensions        = false;               // Generates find extension methods based on PKs information.
+                IsCompactColumns              = true;                 // If true, column compact view.
+
+
+                //PluralizeClassNames                 = false;   // If true, pluralizes table class names.
+                //SingularizeClassNames               = true;    // If true, singularizes table class names.
+                PluralizeDataContextPropertyNames   = false;    // If true, pluralizes DataContext property names.
+                SingularizeDataContextPropertyNames = true;   // If true, singularizes DataContex property names.
+
+                //GenerateDataTypes                   = false;   // If true, generates the DataType/Length/Precision/Scale properties of the Column attribute (unless overriden by the properties below).
+                //GenerateDataTypeProperty            = null;    // If true, generates the DataType property of the Column attribute. If false, excludes generation on the DataType property even if GenerateDataTypes == true.
+                //GenerateLengthProperty              = null;    // If true, generates the Length property of the Column attribute. If false, excludes generation on the Length property even if GenerateDataTypes == true.
+                //GeneratePrecisionProperty           = null;    // If true, generates the Precision property of the Column attribute. If false, excludes generation on the Precision property even if GenerateDataTypes == true.
+                //GenerateScaleProperty               = null;    // If true, generates the Scale property of the Column attribute. If false, excludes generation on the Scale property even if GenerateDataTypes == true.
+                //GenerateDbTypes                     = false;   // If true, generates the DbType property of the Column attribute.
+
+                //GenerateObsoleteAttributeForAliases = false;   // If true, generates [Obsolete] attribute for aliases.
+                //IsCompactColumnAliases              = true;    // If true, column alias compact view.
+
+                NormalizeNames                      = true;    // convert some_name to SomeName for types and members
+
+                GetSchemaOptions.IncludedSchemas = new[] {"dbo"};     // Defines only included schemas.
+
+
+                //Func<string, bool, string> ToValidName         = ToValidNameDefault;          // Defines function to convert names to valid (My_Table to MyTable) 
+                //Func<string, bool, string> ConvertToCompilable = ConvertToCompilableDefault;  // Converts name to c# compatible. By default removes uncompatible symbols and converts result with ToValidName
+
+                //Func<ForeignKey, string> GetAssociationExtensionSinglularName = GetAssociationExtensionSinglularNameDefault; // Gets singular method extension method name for association 
+                //Func<ForeignKey, string> GetAssociationExtensionPluralName    = GetAssociationExtensionPluralNameDefault;    // Gets plural method extension method name for association 
+            
+
+                LoadSqlServerMetadata("KLG-W005", "Pilot");
+              
+
+                // Меняем наименование ссылок по внешним ключам
+				// Добавляем название схемы как префикс для результирующего класса если схема не dbo
+                foreach (Table table in Tables.Values)
+				{
+					if(table.Columns.ContainsKey("Id") && table.Columns["Id"].ColumnType == "uniqueidentifier" && table.Columns.ContainsKey("Created") && table.Columns.ContainsKey("Modified") && table.Columns.ContainsKey("Deleted"))
+						table.BaseClass = "IEntity";
+					if(table.Schema != "dbo")
+					{
+						var prefix = table.Schema[0].ToString().ToUpper() + table.Schema.Substring(1);
+						table.TypeName = table.DataContextPropertyName = prefix + table.TableName;
+					}            
+                }
+
+				foreach(Table table in Tables.Values)
+                {
+					foreach (ForeignKey foreignKey in table.ForeignKeys.Values)
+					{
+						if (foreignKey.AssociationType == AssociationType.OneToMany)
+							foreignKey.MemberName = 
+								foreignKey.OtherTable.Name + "To" + foreignKey.OtherColumns[0].Name.Replace("Id","")  ;
+
+						if (foreignKey.AssociationType == AssociationType.ManyToOne)
+							foreignKey.MemberName = foreignKey.ThisColumns[0].Name.Replace("Id","") + "Ref";
+					}        					
+				}
+				
+                GenerateSqlServerFreeText = false;
+
+                GenerateModel();
+#>

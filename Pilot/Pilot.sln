@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.API", "Pilot\Pilot.API.csproj", "{CC4F157F-11A3-40BC-BB7D-39DD8F5D1E1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot.API", "Pilot\Pilot.API.csproj", "{CC4F157F-11A3-40BC-BB7D-39DD8F5D1E1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.Common", "Pilot.Common\Pilot.Common.csproj", "{925DDC63-3E67-4B2B-ABD2-8478146287F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot.Common", "Pilot.Common\Pilot.Common.csproj", "{925DDC63-3E67-4B2B-ABD2-8478146287F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.Repository", "Pilot.Repository\Pilot.Repository.csproj", "{D2ED94D2-4C27-4B9E-B8D8-95555EA01F14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot.Repository", "Pilot.Repository\Pilot.Repository.csproj", "{D2ED94D2-4C27-4B9E-B8D8-95555EA01F14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.DataCore", "Pilot.DataCore\Pilot.DataCore.csproj", "{6AC2C35A-4F4F-4EB2-8FA4-1D00C4A6BDC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot.DataCore", "Pilot.DataCore\Pilot.DataCore.csproj", "{6AC2C35A-4F4F-4EB2-8FA4-1D00C4A6BDC7}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Pilot.Database", "Pilot.Database\Pilot.Database.sqlproj", "{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,12 @@ Global
 		{6AC2C35A-4F4F-4EB2-8FA4-1D00C4A6BDC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AC2C35A-4F4F-4EB2-8FA4-1D00C4A6BDC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AC2C35A-4F4F-4EB2-8FA4-1D00C4A6BDC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
