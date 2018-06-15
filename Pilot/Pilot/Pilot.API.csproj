@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pilot.Helper\Pilot.Helper.csproj" />
     <ProjectReference Include="..\Pilot.Repository\Pilot.Repository.csproj" />
   </ItemGroup>
 

@@ -2,6 +2,7 @@
 using Pilot.Common.Model.Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -33,6 +34,11 @@ namespace Pilot.API.Infrastructure
                 Meta = null,
                 Status = (int)HttpStatusCode.OK
             });
+        }
+
+        protected FileStreamResult Report(Stream report, string reportName)
+        {
+            return File(report, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportName);
         }
     }
 }

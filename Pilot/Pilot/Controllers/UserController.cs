@@ -2,6 +2,7 @@
 using Pilot.API.Infrastructure;
 using Pilot.Common.Model;
 using Pilot.Common.Model.Common;
+using Pilot.Helper;
 using Pilot.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Pilot.API.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class UserController : BaseController
     {
@@ -29,6 +31,17 @@ namespace Pilot.API.Controllers
         {
             var resp = (await _userRepository.GetDtoAll()).ToList();
             return Ok(resp);
+        }
+
+        /// <summary>
+        /// Получить документ
+        /// </summary>
+        [ProducesResponseType(typeof(ResponseWrapper<IEnumerable<UserResponse>>), 200)]
+        [HttpGet("{name}&{value}")]
+        public IActionResult Get(string name, string value)
+        {
+            var b = DocumentHelper.GetReport(name, value);
+            return Report(b, "d.docx");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Pilot.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "trghfg", "valdfghdfghgfdhghue2" };
+            return new string[] { "11111", "2222222222" };
         }
 
         // GET api/values/5

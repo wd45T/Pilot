@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot.DataCore", "Pilot.Dat
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Pilot.Database", "Pilot.Database\Pilot.Database.sqlproj", "{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.Helpers", "Pilot.Helpers\Pilot.Helpers.csproj", "{5E18E871-3B56-40DA-8DD1-50408EE94EFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.Helper", "Pilot.Helper\Pilot.Helper.csproj", "{8517F25F-F7E9-4BD1-B19D-DF107500950D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +43,10 @@ Global
 		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Release|Any CPU.Build.0 = Release|Any CPU
 		{891B2CD7-CAD4-4ECC-A644-03EA95AC5556}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{5E18E871-3B56-40DA-8DD1-50408EE94EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E18E871-3B56-40DA-8DD1-50408EE94EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E18E871-3B56-40DA-8DD1-50408EE94EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E18E871-3B56-40DA-8DD1-50408EE94EFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8517F25F-F7E9-4BD1-B19D-DF107500950D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8517F25F-F7E9-4BD1-B19D-DF107500950D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8517F25F-F7E9-4BD1-B19D-DF107500950D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8517F25F-F7E9-4BD1-B19D-DF107500950D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
