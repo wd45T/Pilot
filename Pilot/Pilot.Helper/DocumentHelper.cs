@@ -15,8 +15,10 @@ namespace Pilot.Helper
         public static Stream GetReport(string name, string value)
         {
             string fileName = @"D:\Pilot\doc.docx";
+
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true))
             {
+                
 
                 string docText = null;
                 using (StreamReader sr = new StreamReader(wordDoc.MainDocumentPart.GetStream()))
@@ -25,7 +27,7 @@ namespace Pilot.Helper
                 }
 
                 Regex regexText = new Regex("doc");
-                docText = regexText.Replace(docText, "alalalaallaaaa");
+                docText = regexText.Replace(docText, name);
                 //regexText = new Regex("name");
                 //docText = regexText.Replace(docText, name);
                 //regexText = new Regex("value");
@@ -35,9 +37,13 @@ namespace Pilot.Helper
                 {
                     sw.Write(docText);
                 }
-
-                return new MemoryStream();
             }
+
+            byte[] templateContent = File.ReadAllBytes(fileName);
+            MemoryStream stream = new MemoryStream();
+            stream.Write(templateContent, 0, templateContent.Length);
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(stream, true))
+                return new MemoryStream(stream.ToArray());
 
         }
 
