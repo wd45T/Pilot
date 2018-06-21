@@ -14,50 +14,33 @@ namespace Pilot.Helper
     {
         public static Stream GetReport(string name, string value)
         {
-            string fileName = @"D:\Pilot\doc.docx";
-
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true))
+            string fileName = @"D:\Pilot\template.docx";
+            string docText = null;
+            byte[] byteArray = File.ReadAllBytes(fileName);
+            using (MemoryStream stream = new MemoryStream())
             {
-                
-
-                string docText = null;
-                using (StreamReader sr = new StreamReader(wordDoc.MainDocumentPart.GetStream()))
+                stream.Write(byteArray, 0, byteArray.Length);
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(stream, true))
                 {
-                    docText = sr.ReadToEnd();
+                    using (StreamReader reader = new StreamReader(wordDoc.MainDocumentPart.GetStream()))
+                    {
+                        docText = reader.ReadToEnd();
+                    }
+
+                    docText = docText.Replace("City", "Калуга");
+                    docText = docText.Replace("Date", DateTime.Now.Date.ToString());
+                    docText = docText.Replace("Com1", "ООО ТРЕШ");
+                    docText = docText.Replace("Dir1", "Пупкин Пупок");
+                    docText = docText.Replace("Citizen", "Иванов Иван Иванович");
+                    docText = docText.Replace("INN", "11212121212");
+                    docText = docText.Replace("KPP", "41234123455");
+
+                    using (StreamWriter writer = new StreamWriter(wordDoc.MainDocumentPart.GetStream(FileMode.Create)))
+                    {
+                        writer.Write(docText);
+                    }
                 }
-
-                Regex regexText = new Regex("doc");
-                docText = regexText.Replace(docText, name);
-                //regexText = new Regex("name");
-                //docText = regexText.Replace(docText, name);
-                //regexText = new Regex("value");
-                //docText = regexText.Replace(docText, value);
-
-                using (StreamWriter sw = new StreamWriter(wordDoc.MainDocumentPart.GetStream()))
-                {
-                    sw.Write(docText);
-                }
-            }
-
-            byte[] templateContent = File.ReadAllBytes(fileName);
-            MemoryStream stream = new MemoryStream();
-            stream.Write(templateContent, 0, templateContent.Length);
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(stream, true))
-                return new MemoryStream(stream.ToArray());
-
-        }
-
-        private static byte[] CreatePackageAsBytes(WordprocessingDocument p)
-        {
-            using (var mstm = new MemoryStream())
-            {
-                using (WordprocessingDocument package = WordprocessingDocument.Create(mstm, WordprocessingDocumentType.Document))
-                {
-                
-                }
-                mstm.Flush();
-                mstm.Close();
-                return mstm.ToArray();
+                return  new MemoryStream(stream.ToArray());
             }
         }
     }

@@ -25,7 +25,7 @@ namespace Pilot.API.Controllers
         /// <summary>
         /// Получить все User
         /// </summary>
-        [ProducesResponseType(typeof(ResponseWrapper<IEnumerable<UserResponse>>), 200)]
+        //[ProducesResponseType(typeof(SomeResponse), 200)]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -36,12 +36,13 @@ namespace Pilot.API.Controllers
         /// <summary>
         /// Получить документ
         /// </summary>
-        [ProducesResponseType(typeof(ResponseWrapper<IEnumerable<UserResponse>>), 200)]
+        //[ProducesResponseType(typeof(SomeResponse), 200)]
         [HttpGet("{name}&{value}")]
         public IActionResult Get(string name, string value)
         {
-            var b = DocumentHelper.GetReport(name, value);
-            return Report(b, "d.docx");
+            var date = DateTime.Now;
+            var document = DocumentHelper.GetReport(name, value);
+            return Report(document, $"договор_{date}.docx");
         }
     }
 }
