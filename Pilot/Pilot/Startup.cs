@@ -38,6 +38,16 @@ namespace Pilot
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowOrigin",
+                    builder => builder
+                        .WithOrigins("http://localhost:3001", "http://localhost:3001/")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()); // при AllowAnyOrigin нельзя AllowCredentials
+            });
+
             services.AddTransient(sp => new DataManager(ConnectionString));
             services.AddTransient<Func<DataManager>>(_ => () => new DataManager(ConnectionString));
             services.AddTransient<Func<SqlConnection>>(_ => () => new SqlConnection(ConnectionString));
@@ -52,6 +62,8 @@ namespace Pilot
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("AllowOrigin");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
