@@ -14,6 +14,7 @@ using Pilot.DataCore;
 using Pilot.Repository.Implementations;
 using Pilot.Repository.Interfaces;
 using Pilot.Repository.Mappings;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Pilot
 {
@@ -58,6 +59,11 @@ namespace Pilot
             services.AddAutoMapper(_ => _.AddProfiles(typeof(DomainProfile)));
 
             services.AddMvc();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Pilot", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -70,6 +76,12 @@ namespace Pilot
             }
 
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pilot_V1");
+            });
         }
     }
 }
