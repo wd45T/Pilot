@@ -14,9 +14,10 @@ namespace Pilot.Helper
     {
         public static Stream GetReport(string name, string value)
         {
-            string fileName = @"D:\Pilot\template.docx";
-            string docText = null;
+            string fileName = @"h:\root\home\wd45dev-001\www\templats\template.docx";
             byte[] byteArray = File.ReadAllBytes(fileName);
+            string docText = null;
+            //byte[] byteArray = Properties.Resources.template;
             using (MemoryStream stream = new MemoryStream())
             {
                 stream.Write(byteArray, 0, byteArray.Length);
@@ -53,7 +54,7 @@ namespace Pilot.Helper
                         writer.Write(docText);
                     }
                 }
-                return  new MemoryStream(stream.ToArray());
+                return new MemoryStream(stream.ToArray());
             }
         }
     }
