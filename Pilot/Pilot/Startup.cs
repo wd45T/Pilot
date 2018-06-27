@@ -43,7 +43,7 @@ namespace Pilot
             {
                 options.AddPolicy("AllowOrigin",
                     builder => builder
-                        .WithOrigins("http://localhost:3001", "http://localhost:3000")
+                        .WithOrigins("http://localhost:3001", "http://localhost:3000", "http://radpomoch.esy.es")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()); // при AllowAnyOrigin нельзя AllowCredentials

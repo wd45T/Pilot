@@ -16,9 +16,9 @@ namespace Pilot.API.Controllers
         /// <summary>
         /// Получить докумен
         /// </summary>
-        [ProducesResponseType(typeof(ReportResponse), 200)]
+        //[ProducesResponseType(typeof(), 200)]
         [HttpPost()]
-        public IActionResult GetReport(ReportResponse report)
+        public IActionResult GetReport([FromBody]ReportResponse report)
         {
             var date = DateTime.Now;
             var document = DocumentHelper.GetReport(report);
