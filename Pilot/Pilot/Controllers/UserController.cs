@@ -34,15 +34,13 @@ namespace Pilot.API.Controllers
         }
 
         /// <summary>
-        /// Получить документ
+        /// Получить документ @"templates\template.docx"
         /// </summary>
         //[ProducesResponseType(typeof(SomeResponse), 200)]
         [HttpGet("{name}&{value}")]
-        public IActionResult Get(string name, string value)
+        public IActionResult Get(long id)
         {
-            var date = DateTime.Now;
-            var document = DocumentHelper.GetReport(name, value);
-            return Report(document, $"договор_{date}.docx");
+            return OkEmpty();
         }
     }
 }
