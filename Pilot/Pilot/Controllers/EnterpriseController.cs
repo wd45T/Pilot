@@ -30,7 +30,7 @@ namespace Pilot.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var resp = (await _enterpriseRepository.GetDtoAll()).ToList();
+            var resp = await _enterpriseRepository.GetDtoAll();
             return Ok(resp);
         }
 

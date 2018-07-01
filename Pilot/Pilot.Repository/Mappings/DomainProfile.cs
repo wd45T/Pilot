@@ -21,7 +21,10 @@ namespace Pilot.Repository.Mappings
 
             CreateMap<EnterpriseBank, EnterpriseBankResponse>();
 
-            CreateMap<Enterprise, EnterpriseResponse>();
+            CreateMap<Enterprise, EnterpriseResponse>()
+                .ForMember(x=>x.ManagerId, o=>o.MapFrom(s=>s.Manager))
+                .ForMember(x=>x.ManagerName, 
+                    o=>o.MapFrom(s=> $"{s.ManagerRef.FirstName} {s.ManagerRef.Patronymic} {s.ManagerRef.FirstName}"));
 
         }
     }

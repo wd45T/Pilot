@@ -6,11 +6,12 @@ namespace Pilot.Common.Model
 {                                                  
     public class EnterpriseResponse
     {
-        public Guid Id { get; set; } 
+        public Guid   Id { get; set; } 
         public string TypeEnterprise { get; set; } 
         public string FullName { get; set; } 
         public string Position { get; set; } 
-        public Guid Manager { get; set; } 
+        public Guid   ManagerId { get; set; } 
+        public string ManagerName { get; set; } 
         public string InPersonManager { get; set; }
         public string Base { get; set; }
         public string INN { get; set; } 

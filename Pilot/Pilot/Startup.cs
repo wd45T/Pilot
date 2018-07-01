@@ -55,6 +55,7 @@ namespace Pilot
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IEnterpriseRepository, EnterpriseRepository>();
+            services.AddScoped<IBankRepository, BankRepository>();
 
 
             services.AddAutoMapper(_ => _.AddProfiles(typeof(DomainProfile)));
