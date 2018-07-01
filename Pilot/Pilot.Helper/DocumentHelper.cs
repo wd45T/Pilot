@@ -15,9 +15,9 @@ namespace Pilot.Helper
     {
         public static Stream GetReport(ReportResponse report)
         {
-            //string fileName = @"h:\root\home\wd45dev-001\www\templats\template.docx";
+            string fileName = @"h:\root\home\wd45dev-001\www\templats\ABON.docx";
             //string fileName = @"D:\Pilot\template.docx";
-            string fileName = @"D:\Pilot\ABON.docx";
+            //string fileName = @"D:\Pilot\ABON.docx";
             byte[] byteArray = File.ReadAllBytes(fileName);
             string docText = null;
             using (MemoryStream stream = new MemoryStream())
