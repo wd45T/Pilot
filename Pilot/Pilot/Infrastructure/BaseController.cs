@@ -38,7 +38,7 @@ namespace Pilot.API.Infrastructure
 
         protected FileStreamResult Report(Stream report, string reportName)
         {
-            return File(report, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportName);
+            return File(report, "application/vnd.openxmlformats-officedocument.spreadsheetml.document", reportName);
         }
     }
 }

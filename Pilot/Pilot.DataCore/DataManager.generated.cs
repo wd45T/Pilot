@@ -5,6 +5,7 @@
 // </auto-generated>
 //---------------------------------------------------------------------------------------------------
 using System;
+using System.Collections.Generic;
 
 using LinqToDB;
 using LinqToDB.Mapping;
@@ -15,14 +16,170 @@ namespace Pilot.DataCore
 {
 	/// <summary>
 	/// Database       : Pilot
-	/// Data Source    : KLG-W005
-	/// Server Version : 11.00.3128
+	/// Data Source    : WD45-PC
+	/// Server Version : 12.00.2000
 	/// </summary>
 	public partial class DataManager : LinqToDB.Data.DataConnection
 	{
-		public ITable<User> User { get { return this.GetTable<User>(); } }
+		public ITable<Bank>           Bank           { get { return this.GetTable<Bank>(); } }
+		public ITable<Enterprise>     Enterprise     { get { return this.GetTable<Enterprise>(); } }
+		public ITable<EnterpriseBank> EnterpriseBank { get { return this.GetTable<EnterpriseBank>(); } }
+		public ITable<PaymentAccount> PaymentAccount { get { return this.GetTable<PaymentAccount>(); } }
+		public ITable<Person>         Person         { get { return this.GetTable<Person>(); } }
+		public ITable<User>           User           { get { return this.GetTable<User>(); } }
 
 		partial void InitDataContext();
+	}
+
+	[Table(Schema="dbo", Name="Bank")]
+	public partial class Bank : IEntity
+	{
+		[PrimaryKey, NotNull    ] public Guid      Id                   { get; set; } // uniqueidentifier
+		[Column,        Nullable] public string    FullNameBank         { get; set; } // nvarchar(500)
+		[Column,        Nullable] public string    AddressBank          { get; set; } // nvarchar(max)
+		[Column,     NotNull    ] public string    BIK                  { get; set; } // nvarchar(16)
+		[Column,     NotNull    ] public string    CorrespondingAccount { get; set; } // nvarchar(25)
+		[Column,     NotNull    ] public DateTime  Created              { get; set; } // datetime
+		[Column,     NotNull    ] public DateTime  Modified             { get; set; } // datetime
+		[Column,        Nullable] public DateTime? Deleted              { get; set; } // datetime
+
+		#region Associations
+
+		/// <summary>
+		/// FK_EnterpriseBank_To_Bank_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="BankId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<EnterpriseBank> EnterpriseBankToBank { get; set; }
+
+		/// <summary>
+		/// FK_PaymentAccount_To_Bank_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="BankId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<PaymentAccount> PaymentAccountToBank { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="Enterprise")]
+	public partial class Enterprise : IEntity
+	{
+		[PrimaryKey, NotNull    ] public Guid      Id              { get; set; } // uniqueidentifier
+		[Column,     NotNull    ] public string    TypeEnterprise  { get; set; } // nvarchar(50)
+		[Column,     NotNull    ] public string    FullName        { get; set; } // nvarchar(300)
+		[Column,        Nullable] public string    Position        { get; set; } // nvarchar(100)
+		[Column,     NotNull    ] public Guid      Manager         { get; set; } // uniqueidentifier
+		[Column,        Nullable] public string    InPersonManager { get; set; } // nvarchar(300)
+		[Column,     NotNull    ] public string    Base            { get; set; } // nvarchar(max)
+		[Column,     NotNull    ] public string    INN             { get; set; } // nvarchar(12)
+		[Column,        Nullable] public string    KPP             { get; set; } // nvarchar(9)
+		[Column,        Nullable] public string    OGRN            { get; set; } // nvarchar(20)
+		[Column,     NotNull    ] public string    LegalAddress    { get; set; } // nvarchar(max)
+		[Column,     NotNull    ] public string    MailingAddress  { get; set; } // nvarchar(max)
+		[Column,        Nullable] public string    PhoneFax        { get; set; } // nvarchar(30)
+		[Column,        Nullable] public string    Email           { get; set; } // nvarchar(100)
+		[Column,        Nullable] public string    Passport        { get; set; } // nvarchar(25)
+		[Column,     NotNull    ] public DateTime  Created         { get; set; } // datetime
+		[Column,     NotNull    ] public DateTime  Modified        { get; set; } // datetime
+		[Column,        Nullable] public DateTime? Deleted         { get; set; } // datetime
+
+		#region Associations
+
+		/// <summary>
+		/// FK_EnterpriseBank_To_Enterprise_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="EnterpriseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<EnterpriseBank> EnterpriseBankToEnterprise { get; set; }
+
+		/// <summary>
+		/// FK_Enterprise_To_Person
+		/// </summary>
+		[Association(ThisKey="Manager", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_Enterprise_To_Person", BackReferenceName="EnterpriseToManager")]
+		public Person ManagerRef { get; set; }
+
+		/// <summary>
+		/// FK_PaymentAccount_To_Enterprise_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="EnterpriseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<PaymentAccount> PaymentAccountToEnterprise { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="EnterpriseBank")]
+	public partial class EnterpriseBank : IEntity
+	{
+		[PrimaryKey, NotNull    ] public Guid      Id           { get; set; } // uniqueidentifier
+		[Column,     NotNull    ] public Guid      EnterpriseId { get; set; } // uniqueidentifier
+		[Column,     NotNull    ] public Guid      BankId       { get; set; } // uniqueidentifier
+		[Column,     NotNull    ] public DateTime  Created      { get; set; } // datetime
+		[Column,     NotNull    ] public DateTime  Modified     { get; set; } // datetime
+		[Column,        Nullable] public DateTime? Deleted      { get; set; } // datetime
+
+		#region Associations
+
+		/// <summary>
+		/// FK_EnterpriseBank_To_Bank
+		/// </summary>
+		[Association(ThisKey="BankId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_EnterpriseBank_To_Bank", BackReferenceName="EnterpriseBankToBank")]
+		public Bank BankRef { get; set; }
+
+		/// <summary>
+		/// FK_EnterpriseBank_To_Enterprise
+		/// </summary>
+		[Association(ThisKey="EnterpriseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_EnterpriseBank_To_Enterprise", BackReferenceName="EnterpriseBankToEnterprise")]
+		public Enterprise EnterpriseRef { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="PaymentAccount")]
+	public partial class PaymentAccount : IEntity
+	{
+		[PrimaryKey, NotNull    ] public Guid      Id           { get; set; } // uniqueidentifier
+		[Column,     NotNull    ] public string    Account      { get; set; } // nvarchar(25)
+		[Column,     NotNull    ] public Guid      EnterpriseId { get; set; } // uniqueidentifier
+		[Column,     NotNull    ] public Guid      BankId       { get; set; } // uniqueidentifier
+		[Column,     NotNull    ] public DateTime  Created      { get; set; } // datetime
+		[Column,     NotNull    ] public DateTime  Modified     { get; set; } // datetime
+		[Column,        Nullable] public DateTime? Deleted      { get; set; } // datetime
+
+		#region Associations
+
+		/// <summary>
+		/// FK_PaymentAccount_To_Bank
+		/// </summary>
+		[Association(ThisKey="BankId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_PaymentAccount_To_Bank", BackReferenceName="PaymentAccountToBank")]
+		public Bank BankRef { get; set; }
+
+		/// <summary>
+		/// FK_PaymentAccount_To_Enterprise
+		/// </summary>
+		[Association(ThisKey="EnterpriseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_PaymentAccount_To_Enterprise", BackReferenceName="PaymentAccountToEnterprise")]
+		public Enterprise EnterpriseRef { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="Person")]
+	public partial class Person : IEntity
+	{
+		[PrimaryKey, NotNull    ] public Guid      Id         { get; set; } // uniqueidentifier
+		[Column,     NotNull    ] public string    FirstName  { get; set; } // nvarchar(100)
+		[Column,     NotNull    ] public string    FamilyName { get; set; } // nvarchar(100)
+		[Column,        Nullable] public string    Patronymic { get; set; } // nvarchar(100)
+		[Column,     NotNull    ] public DateTime  Created    { get; set; } // datetime
+		[Column,     NotNull    ] public DateTime  Modified   { get; set; } // datetime
+		[Column,        Nullable] public DateTime? Deleted    { get; set; } // datetime
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Enterprise_To_Person_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="Manager", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Enterprise> EnterpriseToManager { get; set; }
+
+		#endregion
 	}
 
 	[Table(Schema="dbo", Name="User")]

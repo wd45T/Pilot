@@ -43,7 +43,7 @@ namespace Pilot
             {
                 options.AddPolicy("AllowOrigin",
                     builder => builder
-                        .WithOrigins("http://localhost:3001")
+                        .WithOrigins("http://localhost:3001", "http://localhost:3000", "http://radpomoch.esy.es")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()); // при AllowAnyOrigin нельзя AllowCredentials
@@ -54,6 +54,8 @@ namespace Pilot
             services.AddTransient<Func<SqlConnection>>(_ => () => new SqlConnection(ConnectionString));
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IEnterpriseRepository, EnterpriseRepository>();
+            services.AddScoped<IBankRepository, BankRepository>();
 
 
             services.AddAutoMapper(_ => _.AddProfiles(typeof(DomainProfile)));

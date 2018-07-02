@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using LinqToDB;
+using LinqToDB.Data;
 using Pilot.DataCore;
 using Pilot.DataCore.Infrastructure;
 using System;
@@ -16,7 +17,7 @@ namespace Pilot.Repository.BaseClasses
     {
         protected readonly DataManager _dataManager;
 
-        protected BaseRepository(DataManager dataManager, IMapper mapper = null)
+        protected BaseRepository(DataManager dataManager)
         {
             _dataManager = dataManager;
         }
@@ -53,6 +54,16 @@ namespace Pilot.Repository.BaseClasses
         public async virtual Task<TDto> GetDtoById(Guid id)
         {
             return await GetEntityIQueriable(x => x.Id == id).ProjectTo<TDto>().FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<long> Create(TEntity entity)
+        {
+            return await _dataManager.InsertWithInt64IdentityAsync(entity);
+        }
+
+        public virtual Task Create(IEnumerable<TEntity> entities)
+        {
+            return Task.Factory.StartNew(() => _dataManager.BulkCopy(entities));
         }
 
         public void Dispose()
