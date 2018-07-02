@@ -2,6 +2,7 @@
 using Pilot.API.Infrastructure;
 using Pilot.Common.Model;
 using Pilot.Repository.Implementations;
+using Pilot.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,11 @@ namespace Pilot.API.Controllers
     [Route("api/[controller]")]
     public class BankController : BaseController
     {
-        private readonly BankRepository _bankRepository;
+        private readonly IBankRepository _bankRepository;
 
-        public BankController(/*IEnterpriseRepository enterpriseRepository*/)
+        public BankController(IBankRepository bankRepository)
         {
-            /// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            _bankRepository = new BankRepository(new DataCore.DataManager("Data Source=SQL6004.site4now.net;Initial Catalog=db_a3d8d7_pilottest_1;User Id=db_a3d8d7_pilottest_1_admin;Password=Rfrfirf70;"));
+            _bankRepository = bankRepository;
         }
 
         /// <summary>
