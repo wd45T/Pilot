@@ -17,10 +17,9 @@ namespace Pilot.API.Controllers
     {
         private readonly IEnterpriseRepository _enterpriseRepository;
 
-        public EnterpriseController(/*IEnterpriseRepository enterpriseRepository*/)
+        public EnterpriseController(IEnterpriseRepository enterpriseRepository)
         {
-            /// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            _enterpriseRepository = new EnterpriseRepository(new DataCore.DataManager("Data Source=SQL6004.site4now.net;Initial Catalog=db_a3d8d7_pilottest_1;User Id=db_a3d8d7_pilottest_1_admin;Password=Rfrfirf70;"));
+            _enterpriseRepository = enterpriseRepository;
         }
 
         /// <summary>
