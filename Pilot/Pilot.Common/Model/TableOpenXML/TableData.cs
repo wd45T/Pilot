@@ -6,7 +6,8 @@ namespace Pilot.Common.Model.TableOpenXML
 {
     public class TableData
     {
-        public IEnumerable<string> HeaderTable { get; set; }
-        public IEnumerable<IEnumerable<string>> Rows { get; set; }
+        public List<string> HeaderTable { get; set; }
+        public List<List<string>> Rows { get; set; }
+
     }
 }

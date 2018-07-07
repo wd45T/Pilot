@@ -24,10 +24,10 @@ namespace Pilot.API.Controllers
         /// </summary>
         //[ProducesResponseType(typeof(), 200)]
         [HttpPost()]
-        public IActionResult GetReport([FromBody]ReportResponse report)
+        public async Task<IActionResult> GetReport([FromBody]ReportResponse report)
         {
             var date = DateTime.Now;
-            var document = _documentHelper.GetReportXML();
+            var document = await _documentHelper.GetReportXML(report);
             return Report(document, $"ABON_{date}.docx");
         }
     }

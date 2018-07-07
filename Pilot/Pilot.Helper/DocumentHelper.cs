@@ -11,6 +11,7 @@ using Pilot.Common.Model;
 using PIK.BOP.IDP.Site.Helpers;
 using System.Net;
 using Pilot.Common.Model.TableOpenXML;
+using System.Threading.Tasks;
 
 namespace Pilot.Helper
 {
@@ -61,10 +62,10 @@ namespace Pilot.Helper
                     //docText = docText.Replace("CitsizePassportIsssued", report.CitsizePassportIsssued);
                     //docText = docText.Replace("CitizeTel", report.CitizeTel);
 
-                    Regex regexText = new Regex("TContractNumberT");
-                    docText = regexText.Replace(docText, report.ContractNumber);
+                    //Regex regexText = new Regex("TContractNumberT");
+                    //docText = regexText.Replace(docText, report.ContractNumber);
 
-                    //docText = docText.Replace("TContractNumberT", report.ContractNumber);
+                    docText = docText.Replace("TContractNumberT", report.ContractNumber);
                     docText = docText.Replace("TContractDateT", DateTime.Now.Date.ToString());
                     docText = docText.Replace("TEnterpriseT", report.Enterprise);
                     docText = docText.Replace("TEnterprisePersonT", report.EnterprisePerson);
@@ -83,66 +84,77 @@ namespace Pilot.Helper
             }
         }
 
-        public Stream GetReportXML()
+        public async Task<Stream> GetReportXML(ReportResponse report)
         {
-            using (MemoryStream result = new MemoryStream())
+            string fileName = @"h:\root\home\wd45dev-001\www\templats\ABON.docx";
+            //string fileName = @"D:\Git\ABON.docx";
+            byte[] byteArray = File.ReadAllBytes(fileName);
+            string docText = null;
+            using (MemoryStream stream = new MemoryStream())
             {
-                using (WordprocessingDocument doc = WordprocessingDocument.Create(result, WordprocessingDocumentType.Document, true))
+                stream.Write(byteArray, 0, byteArray.Length);
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(stream, true))
                 {
-                    MainDocumentPart mainPart = doc.AddMainDocumentPart();
-                    mainPart.Document = new Document();
-                    Body body = mainPart.Document.AppendChild(new Body());
+                    using (StreamReader reader = new StreamReader(doc.MainDocumentPart.GetStream()))
+                        docText = await reader.ReadToEndAsync();
 
-                    body.Append(_openXMLHelper.GenerateParagraph($"ggg", new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center } }));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Дата начала строительства"));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Дата окончания строительства:"));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Руководитель проекта:"));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Генеральный проектировщик:"));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Застройщик:"));
+
+                    docText = docText.Replace("TContractNumberT", report.ContractNumber);
+                    docText = docText.Replace("TContractDateT", DateTime.Now.Date.ToString());
+                    docText = docText.Replace("TEnterpriseT", report.Enterprise);
+                    docText = docText.Replace("TEnterprisePersonT", report.EnterprisePerson);
+                    docText = docText.Replace("TBaseT", report.Base);
+                    docText = docText.Replace("TSectionAddressT", report.SectionAddress);
+                    docText = docText.Replace("TSectionRoleT", report.SectionRole);
+                    docText = docText.Replace("TSectionAreaT", report.SectionArea);
+                    docText = docText.Replace("TContractPriceT", report.ContractPrice);
+
+                    using (StreamWriter writer = new StreamWriter(doc.MainDocumentPart.GetStream(FileMode.Create)))
+                        await writer.WriteAsync(docText);
+
+
+                    var mainPart = doc.MainDocumentPart;
+                    //mainPart.Document = new Document();
+                    var body = mainPart.Document.AppendChild(new Body());
 
                     body.Append(_openXMLHelper.GenerateParagraph(null, new ParagraphProperties { SectionProperties = _openXMLHelper.GenerateSectionPageBreak() }));
 
-                    body.Append(_openXMLHelper.GenerateParagraph("Общие данные", new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center } }));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Жилые:"));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Нежилые: "));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Кладовые: "));
-                    body.Append(_openXMLHelper.GenerateParagraph($"СКБ: "));
-                    body.Append(_openXMLHelper.GenerateParagraph($"Машиноместа:"));
-                    body.Append(_openXMLHelper.GenerateParagraph($"СКБ, кол-во мест: "));
-
-                    body.Append(_openXMLHelper.GenerateParagraph(null, new ParagraphProperties { SectionProperties = _openXMLHelper.GenerateSectionPageBreak() }));
-
-                    body.Append(_openXMLHelper.GenerateParagraph("Схема ген. плана", new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center } }));
                     #region AddImage
-                        ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
-                        HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://i.ytimg.com/vi/6aKxU_sQGiw/maxresdefault.jpg");
-                        req.UseDefaultCredentials = true;
-                        req.PreAuthenticate = true;
-                        req.Credentials = CredentialCache.DefaultCredentials;
-                        HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                    ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
+                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(report.URLImage ?? "https://i.ytimg.com/vi/6aKxU_sQGiw/maxresdefault.jpg");
+                    req.UseDefaultCredentials = true;
+                    req.PreAuthenticate = true;
+                    req.Credentials = CredentialCache.DefaultCredentials;
+                    HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
 
-                        var str = resp.GetResponseStream();
-                        imagePart.FeedData(str);
+                    var str = resp.GetResponseStream();
+                    imagePart.FeedData(str);
 
-                        //var img = Image.FromStream(str);
+                    //var img = Image.FromStream(str);
 
-                        //var iWidth = img.Width * 500;
-                        //var iHeight = img.Height * 500;
+                    //var iWidth = img.Width * 500;
+                    //var iHeight = img.Height * 500;
 
-                        _openXMLHelper.AddImageToBody(doc, mainPart.GetIdOfPart(imagePart), 6311500, 5339000);
-                    
+                    _openXMLHelper.AddImageToBody(doc, mainPart.GetIdOfPart(imagePart), 5311500, 4339000);
+
                     #endregion AddImage
 
-                    body.Append(_openXMLHelper.GenerateParagraph(null, new ParagraphProperties { SectionProperties = _openXMLHelper.GenerateSectionPageBreak() }));
 
-                    body.Append(_openXMLHelper.GenerateParagraph("Команда проекта", new ParagraphProperties { Justification = new Justification { Val = JustificationValues.Center } }));
+                    //body.Append(_openXMLHelper.GenerateParagraph(null, new ParagraphProperties { SectionProperties = _openXMLHelper.GenerateSectionPageBreak() }));
+                    body.Append(_openXMLHelper.GenerateParagraph(""));
 
-
-                    body.Append(_openXMLHelper.CreateTable(
-                        new TableData
-                        {
-                            HeaderTable = new List<string> { "Вид работ", "Вид пользования", "Расположение", "Площадь", "Сроки выполнения работ", "Стоимость услуг" },
-                            Rows = new List<List<string>>
+                    var tableDate = new TableData
+                    {
+                        HeaderTable = new List<string>
+                            {
+                                "Вид работ",
+                                "Вид пользования",
+                                "Расположение",
+                                "Площадь",
+                                "Сроки выполнения работ",
+                                "Стоимость услуг"
+                            },
+                        Rows = new List<List<string>>
                             {
                                 new List<string>
                                 {
@@ -163,9 +175,13 @@ namespace Pilot.Helper
                                     "20 000,00 рублей",
                                 },
                             }
-                        }));    
+                    };
+
+                    tableDate.Rows.AddRange(report.Rows);
+
+                    body.Append(_openXMLHelper.CreateTable(tableDate));
                 }
-                return new MemoryStream(result.ToArray());
+                return new MemoryStream(stream.ToArray());
             }
         }
     }

@@ -14,7 +14,8 @@ namespace Pilot.Common.Model
         public string SectionRole { get; set; }
         public string SectionArea { get; set; }
         public string ContractPrice { get; set; }
-
+        public List<List<string>> Rows { get; set; }
+        public string URLImage { get; set; }
 
         //public string City { get; set; }
         //public string Com1 { get; set; }
