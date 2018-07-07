@@ -13,15 +13,21 @@ namespace Pilot.API.Controllers
     [Route("api/[controller]")]
     public class ReportsController : BaseController
     {
+        private readonly DocumentHelper _documentHelper;
+        public ReportsController()
+        {
+            _documentHelper = new DocumentHelper();
+        }
+
         /// <summary>
         /// Получить докумен
         /// </summary>
         //[ProducesResponseType(typeof(), 200)]
         [HttpPost()]
-        public IActionResult GetReport([FromBody]ReportResponse report)
+        public async Task<IActionResult> GetReport([FromBody]ReportResponse report)
         {
             var date = DateTime.Now;
-            var document = DocumentHelper.GetReport(report);
+            var document = await _documentHelper.GetReportXML(report);
             return Report(document, $"ABON_{date}.docx");
         }
     }
