@@ -226,5 +226,27 @@ namespace PIK.BOP.IDP.Site.Helpers
 
             return table;
         }
+
+        public void AddTable(MainDocumentPart doc, int table_number, TableData tableData)
+        {
+            Table table = doc.Document.Body.Elements<Table>().ElementAt(table_number - 1);
+
+            table.Append(new TableRow());
+            
+            foreach (var row in tableData.Rows)
+            {
+                var tableRow = new TableRow();
+                foreach (var cell in row)
+                {
+                    var tableCell = new TableCell();
+                    var paragraph = new Paragraph(new Run(new Text(cell)));
+                    tableCell.Append(paragraph);
+                    tableRow.Append(tableCell);
+                }
+                table.Append(tableRow);
+            }
+
+            table.RemoveChild(table.Elements<TableRow>().ElementAt(1));
+        }
     }
 }

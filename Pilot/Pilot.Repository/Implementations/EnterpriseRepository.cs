@@ -19,6 +19,7 @@ namespace Pilot.Repository.Implementations
         public async override Task<ICollection<EnterpriseResponse>> GetDtoAll()
         {
             var enterprise = await _dataManager.Enterprise
+                .LoadWith(x=>x.ManagerRef)
                 .Where(x => !x.Deleted.HasValue)
                 .ProjectTo<EnterpriseResponse>()
                 .ToListAsync();
@@ -35,6 +36,24 @@ namespace Pilot.Repository.Implementations
             });
 
             return enterprise;
+        }
+
+        public async override Task<EnterpriseResponse> GetDtoById(Guid id)
+        {
+            var enterpris = AutoMapper.Mapper.Map<EnterpriseResponse>
+                (await _dataManager.Enterprise
+                    .LoadWith(x => x.ManagerRef)
+                    .FirstOrDefaultAsync(x => !x.Deleted.HasValue));
+
+            enterpris.Banks = _dataManager.EnterpriseBank
+                .Where(y => y.EnterpriseId == enterpris.Id)
+                .Select(y => y.BankRef)
+                .ProjectTo<BankResponse>();
+            enterpris.PaymentAccounts = _dataManager.PaymentAccount
+                .Where(y => y.EnterpriseId == enterpris.Id)
+                .ProjectTo<PaymentAccountResponse>();
+
+            return enterpris;
         }
     }
 }

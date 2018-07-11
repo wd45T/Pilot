@@ -24,70 +24,10 @@ namespace Pilot.Helper
             _openXMLHelper = new OpenXMLHelper();
         }
 
-        public static Stream GetReport(ReportResponse report)
+        public async Task<Stream> GetReportXML(TypeDocData report)
         {
-            string fileName = @"h:\root\home\wd45dev-001\www\templats\ABON.docx";
-            //string fileName = @"D:\Pilot\template.docx";
-            //string fileName = @"D:\Pilot\ABON.docx";
-            byte[] byteArray = File.ReadAllBytes(fileName);
-            string docText = null;
-            using (MemoryStream stream = new MemoryStream())
-            {
-                stream.Write(byteArray, 0, byteArray.Length);
-                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(stream, true))
-                {
-                    using (StreamReader reader = new StreamReader(wordDoc.MainDocumentPart.GetStream()))
-                    {
-                        docText = reader.ReadToEnd();
-                    }
-
-                    //docText = docText.Replace("City", report.City);
-                    //docText = docText.Replace("Date", DateTime.Now.Date.ToString());
-                    //docText = docText.Replace("Com1", report.Com1);
-                    //docText = docText.Replace("Dir1", report.Dir1);
-                    //docText = docText.Replace("Citizen", report.Citizen);
-                    //docText = docText.Replace("INN", report.INN);
-                    //docText = docText.Replace("KPP", report.KPP);
-                    //docText = docText.Replace("Bank", report.Bank);
-                    //docText = docText.Replace("RA", report.RA);
-                    //docText = docText.Replace("KA", report.KA);
-                    //docText = docText.Replace("BIK", report.BIK);
-                    //docText = docText.Replace("YAdres", report.YAdres);
-                    //docText = docText.Replace("PAdres", report.PAdres);
-                    //docText = docText.Replace("CirtizenReg", report.CirtizenReg);
-                    //docText = docText.Replace("CitipzenP", report.CitipzenP);
-                    //docText = docText.Replace("CiptizePasport", report.CiptizePasport);
-                    //docText = docText.Replace("CiwtizePaspwortNuwmber", report.CiwtizePaspwortNuwmber);
-                    //docText = docText.Replace("CitaizePaspsorDadte", report.CitaizePaspsorDadte);
-                    //docText = docText.Replace("CitsizePassportIsssued", report.CitsizePassportIsssued);
-                    //docText = docText.Replace("CitizeTel", report.CitizeTel);
-
-                    //Regex regexText = new Regex("TContractNumberT");
-                    //docText = regexText.Replace(docText, report.ContractNumber);
-
-                    docText = docText.Replace("TContractNumberT", report.ContractNumber);
-                    docText = docText.Replace("TContractDateT", DateTime.Now.Date.ToString());
-                    docText = docText.Replace("TEnterpriseT", report.Enterprise);
-                    docText = docText.Replace("TEnterprisePersonT", report.EnterprisePerson);
-                    docText = docText.Replace("TBaseT", report.Base);
-                    docText = docText.Replace("TSectionAddressT", report.SectionAddress);
-                    docText = docText.Replace("TSectionRoleT", report.SectionRole);
-                    docText = docText.Replace("TSectionAreaT", report.SectionArea);
-                    docText = docText.Replace("TContractPriceT", report.ContractPrice);
-
-                    using (StreamWriter writer = new StreamWriter(wordDoc.MainDocumentPart.GetStream(FileMode.Create)))
-                    {
-                        writer.Write(docText);
-                    }
-                }
-                return new MemoryStream(stream.ToArray());
-            }
-        }
-
-        public async Task<Stream> GetReportXML(ReportResponse report)
-        {
-            string fileName = @"h:\root\home\wd45dev-001\www\templats\ABON.docx";
-            //string fileName = @"D:\Git\ABON.docx";
+            string fileName = @"h:\root\home\wd45dev-001\www\templats\TypeDoc.docx";
+            //string fileName = @"D:\Git\TypeDoc.docx";
             byte[] byteArray = File.ReadAllBytes(fileName);
             string docText = null;
             using (MemoryStream stream = new MemoryStream())
@@ -98,50 +38,37 @@ namespace Pilot.Helper
                     using (StreamReader reader = new StreamReader(doc.MainDocumentPart.GetStream()))
                         docText = await reader.ReadToEndAsync();
 
-
                     docText = docText.Replace("TContractNumberT", report.ContractNumber);
-                    docText = docText.Replace("TContractDateT", DateTime.Now.Date.ToString());
-                    docText = docText.Replace("TEnterpriseT", report.Enterprise);
-                    docText = docText.Replace("TEnterprisePersonT", report.EnterprisePerson);
-                    docText = docText.Replace("TBaseT", report.Base);
-                    docText = docText.Replace("TSectionAddressT", report.SectionAddress);
-                    docText = docText.Replace("TSectionRoleT", report.SectionRole);
-                    docText = docText.Replace("TSectionAreaT", report.SectionArea);
-                    docText = docText.Replace("TContractPriceT", report.ContractPrice);
+                    docText = docText.Replace("TContractDateT", DateTime.Now.ToString("d"));
+
+                    docText = docText.Replace("TEnterpriseT", report.Enterprise.FullName);
+                    docText = docText.Replace("TEnterprisePersonT", report.Enterprise.ManagerName);
+                    docText = docText.Replace("TBaseT", report.Enterprise.Base);
+
+                    docText = docText.Replace("TPrepaidExpenseT", report.PrepaidExpense);
+                    docText = docText.Replace("TPrepaidExpenseInWordsT", report.PrepaidExpenseInWords);
+                    docText = docText.Replace("TBalancePriceT", report.BalancePrice);
+                    docText = docText.Replace("TBalancePriceInWordsT", report.BalancePriceInWords);
+
+                    docText = docText.Replace("TShortNameEnterpriseT", report.Enterprise.FullName);
+                    docText = docText.Replace("TYAdressT", report.Enterprise.LegalAddress);
+                    docText = docText.Replace("TPAdressT", report.Enterprise.MailingAddress);
+                    docText = docText.Replace("TInnT", report.Enterprise.INN);
+                    docText = docText.Replace("TKppT", report.Enterprise.KPP);
+                    docText = docText.Replace("TOgrnT", report.Enterprise.OGRN);
+                    docText = docText.Replace("TRcT", report.PaymentAccount.Account);
+                    docText = docText.Replace("TBankNameT", report.Bank.FullNameBank);
+                    docText = docText.Replace("TKcT", report.Bank.CorrespondingAccount);
+                    docText = docText.Replace("TBikT", report.Bank.BIK);
+                    docText = docText.Replace("TPositionPersonT", report.Enterprise.Position);
+                    docText = docText.Replace("TShortNamePersonT", report.Enterprise.ManagerName);
 
                     using (StreamWriter writer = new StreamWriter(doc.MainDocumentPart.GetStream(FileMode.Create)))
                         await writer.WriteAsync(docText);
 
 
                     var mainPart = doc.MainDocumentPart;
-                    //mainPart.Document = new Document();
                     var body = mainPart.Document.AppendChild(new Body());
-
-                    body.Append(_openXMLHelper.GenerateParagraph(null, new ParagraphProperties { SectionProperties = _openXMLHelper.GenerateSectionPageBreak() }));
-
-                    #region AddImage
-                    ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
-                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(report.URLImage ?? "https://i.ytimg.com/vi/6aKxU_sQGiw/maxresdefault.jpg");
-                    req.UseDefaultCredentials = true;
-                    req.PreAuthenticate = true;
-                    req.Credentials = CredentialCache.DefaultCredentials;
-                    HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-                    var str = resp.GetResponseStream();
-                    imagePart.FeedData(str);
-
-                    //var img = Image.FromStream(str);
-
-                    //var iWidth = img.Width * 500;
-                    //var iHeight = img.Height * 500;
-
-                    _openXMLHelper.AddImageToBody(doc, mainPart.GetIdOfPart(imagePart), 5311500, 4339000);
-
-                    #endregion AddImage
-
-
-                    //body.Append(_openXMLHelper.GenerateParagraph(null, new ParagraphProperties { SectionProperties = _openXMLHelper.GenerateSectionPageBreak() }));
-                    body.Append(_openXMLHelper.GenerateParagraph(""));
 
                     var tableDate = new TableData
                     {
@@ -179,7 +106,8 @@ namespace Pilot.Helper
 
                     tableDate.Rows.AddRange(report.Rows);
 
-                    body.Append(_openXMLHelper.CreateTable(tableDate));
+                    _openXMLHelper.AddTable(mainPart, 1, tableDate);
+
                 }
                 return new MemoryStream(stream.ToArray());
             }

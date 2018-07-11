@@ -33,5 +33,16 @@ namespace Pilot.API.Controllers
             return Ok(resp);
         }
 
+        /// <summary>
+        /// Получить все предприятия
+        /// </summary>
+        [ProducesResponseType(typeof(EnterpriseResponse), 200)]
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var resp = await _enterpriseRepository.GetDtoById(id);
+            return Ok(resp);
+        }
+
     }
 }

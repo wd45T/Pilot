@@ -42,5 +42,17 @@ namespace Pilot.API.Controllers
             var resp = await _bankRepository.GetBankByBIK(bik);
             return Ok(resp);
         }
+
+        /// <summary>
+        /// Получить банк по ID
+        /// </summary>
+        [ProducesResponseType(typeof(BankResponse), 200)]
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetBankById(Guid id)
+        {
+            var resp = await _bankRepository.GetDtoById(id);
+            return Ok(resp);
+        }
     }
 }
+
